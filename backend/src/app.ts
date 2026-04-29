@@ -31,7 +31,16 @@ const app: Application = express();
 initCronJobs();
 
 // Middleware
-app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
+const allowedOrigins = [
+  'http://localhost:5173',
+  'https://recharge-app-ten.vercel.app',
+  process.env.CLIENT_URL
+].filter(Boolean) as string[];
+
+app.use(cors({ 
+  origin: allowedOrigins, 
+  credentials: true 
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
