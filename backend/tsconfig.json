@@ -13,7 +13,8 @@
     "typeRoots": [
       "./node_modules/@types",
       "./src/types"
-    ]
+    ],
+    "ignoreDeprecations": "5.0"
   },
   "include": [
     "src/**/*"
