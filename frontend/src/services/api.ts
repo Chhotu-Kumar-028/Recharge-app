@@ -2,7 +2,7 @@ import axios from 'axios';
 import { getToken } from '../utils/token';
 
 export const api = axios.create({
-  baseURL: '/api', // Proxied by Vite to http://localhost:5000/api
+  baseURL: import.meta.env.VITE_API_URL || '/api', // Use env var if available, else fallback to proxy
   withCredentials: true,
 });
 
