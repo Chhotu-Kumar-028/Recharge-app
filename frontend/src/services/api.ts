@@ -2,10 +2,10 @@ import axios from 'axios';
 import { getToken } from '../utils/token';
 
 const getBaseUrl = () => {
-  const url = import.meta.env.VITE_API_URL;
+  const url = import.meta.env.VITE_API_URL?.trim();
   if (!url) return '/api';
-  // Remove trailing slash if present, then append /api if it doesn't already end with it
-  const cleanUrl = url.replace(/\/$/, '');
+  // Remove trailing slashes if present, then append /api if it doesn't already end with it
+  const cleanUrl = url.replace(/\/+$/, '');
   return cleanUrl.endsWith('/api') ? cleanUrl : `${cleanUrl}/api`;
 };
 
