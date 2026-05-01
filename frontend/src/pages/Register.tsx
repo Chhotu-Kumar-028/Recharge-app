@@ -35,8 +35,8 @@ export default function Register() {
       if (res.data.success) {
         toast.success('Registration successful!')
         // If the backend returns a token upon registration, save it. Otherwise redirect to login.
-        if (res.data.token) {
-          login(res.data.token, res.data.data)
+        if (res.data.data?.token) {
+          login(res.data.data.token, res.data.data)
           navigate('/')
         } else {
           navigate('/login')

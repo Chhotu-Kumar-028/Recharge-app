@@ -30,7 +30,7 @@ export default function Login() {
       if (res.data.success) {
         toast.success('Login successful!')
         // Context login saves token to localStorage and sets user
-        login(res.data.token, res.data.data)
+        login(res.data.data.token, res.data.data)
         navigate('/')
       }
     } catch (err: any) {
