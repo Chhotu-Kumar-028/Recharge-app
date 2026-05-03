@@ -2,8 +2,6 @@
 
 **🌍 Live Demo:** [https://recharge-app-ten.vercel.app/](https://recharge-app-ten.vercel.app/)
 
-![Recharge Saathi Application](screenshot.png)
-
 ### Mobile Recharge Should Not Be a Luxury
 *Find cheaper recharge plans, compare telecom prices, and get help if you cannot afford a recharge.*
 
