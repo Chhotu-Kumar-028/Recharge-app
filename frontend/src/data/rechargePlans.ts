@@ -1,4 +1,4 @@
-export type NetworkCompany = 'Jio' | 'Airtel' | 'Vi' | 'BSNL'
+export type NetworkCompany = 'Jio' | 'Airtel' | 'Vi' | 'BSNL' | 'Recharge Saathi'
 export type BestFor = 'students' | 'workers' | 'family'
 
 export interface RechargePlan {
@@ -11,6 +11,7 @@ export interface RechargePlan {
   smsIncluded: boolean
   bestFor: BestFor
   name: string
+  savings?: number
 }
 
 export const rechargePlans: RechargePlan[] = [
@@ -37,4 +38,8 @@ export const rechargePlans: RechargePlan[] = [
   { id: '21', company: 'Airtel', price: 99, dataPerDayGB: 0.3, validityDays: 18, unlimitedCalls: false, smsIncluded: false, bestFor: 'students', name: 'Airtel Starter' },
   { id: '22', company: 'Vi', price: 107, dataPerDayGB: 0.4, validityDays: 14, unlimitedCalls: true, smsIncluded: false, bestFor: 'students', name: 'Vi Pocket' },
   { id: '23', company: 'BSNL', price: 187, dataPerDayGB: 1, validityDays: 24, unlimitedCalls: true, smsIncluded: true, bestFor: 'workers', name: 'BSNL Standard' },
+  { id: 'rs-1', company: 'Recharge Saathi', price: 149, dataPerDayGB: 1.5, validityDays: 28, unlimitedCalls: true, smsIncluded: true, bestFor: 'family', name: 'Recharge Saathi Starter', savings: 90 },
+  { id: 'rs-2', company: 'Recharge Saathi', price: 179, dataPerDayGB: 2, validityDays: 28, unlimitedCalls: true, smsIncluded: true, bestFor: 'workers', name: 'Recharge Saathi Value', savings: 110 },
+  { id: 'rs-3', company: 'Recharge Saathi', price: 199, dataPerDayGB: 2.5, validityDays: 28, unlimitedCalls: true, smsIncluded: true, bestFor: 'family', name: 'Recharge Saathi Max', savings: 150 },
+  { id: 'rs-4', company: 'Recharge Saathi', price: 349, dataPerDayGB: 3, validityDays: 56, unlimitedCalls: true, smsIncluded: true, bestFor: 'workers', name: 'Recharge Saathi Pro', savings: 130 }
 ]

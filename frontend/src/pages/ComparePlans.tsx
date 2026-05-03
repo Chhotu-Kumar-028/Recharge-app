@@ -7,8 +7,9 @@ import { Card } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { api } from '@/services/api'
 import { toast } from 'sonner'
+import { rechargePlans as defaultPlans } from '@/data/rechargePlans'
 
-export type NetworkCompany = 'Jio' | 'Airtel' | 'Vi' | 'BSNL'
+export type NetworkCompany = 'Jio' | 'Airtel' | 'Vi' | 'BSNL' | 'Recharge Saathi'
 
 export default function ComparePlans() {
   const [search, setSearch] = useState('')
@@ -16,6 +17,7 @@ export default function ComparePlans() {
   const [maxPrice, setMaxPrice] = useState(9999)
   const [minValidity, setMinValidity] = useState(0)
   const [minData, setMinData] = useState(0)
+  const [sortBy, setSortBy] = useState<'none' | 'lowest_price' | 'highest_data' | 'best_value'>('none')
   
   const [rechargePlans, setRechargePlans] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
@@ -35,10 +37,17 @@ export default function ComparePlans() {
              dataPerDayGB: p.dataPerDay,
              perks: [p.description]
           }))
-          setRechargePlans(mappedPlans)
+          if (mappedPlans.length > 0) {
+            setRechargePlans(mappedPlans)
+          } else {
+            setRechargePlans(defaultPlans)
+          }
+        } else {
+          setRechargePlans(defaultPlans)
         }
       } catch(err) {
-        toast.error('Failed to load recharge plans')
+        setRechargePlans(defaultPlans)
+        toast.error('Showing sample recharge plans')
       } finally {
         setLoading(false)
       }
@@ -60,6 +69,28 @@ export default function ComparePlans() {
       return matchSearch && matchCompany && matchPrice && matchVal && matchData
     })
   }, [search, company, maxPrice, minValidity, minData, rechargePlans])
+
+  const sortedAndFiltered = useMemo(() => {
+    const plans = [...filtered]
+    if (sortBy === 'lowest_price') {
+      plans.sort((a, b) => a.price - b.price)
+    } else if (sortBy === 'highest_data') {
+      plans.sort((a, b) => b.dataPerDayGB - a.dataPerDayGB)
+    } else if (sortBy === 'best_value') {
+      // Best value: Highest (Data * Validity) / Price
+      plans.sort((a, b) => {
+        const valA = (a.dataPerDayGB * a.validityDays) / (a.price || 1)
+        const valB = (b.dataPerDayGB * b.validityDays) / (b.price || 1)
+        return valB - valA
+      })
+    }
+    return plans
+  }, [filtered, sortBy])
+
+  const cheapestPlanId = useMemo(() => {
+    if (sortedAndFiltered.length === 0) return null
+    return sortedAndFiltered.reduce((prev, curr) => (prev.price < curr.price ? prev : curr)).id
+  }, [sortedAndFiltered])
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
@@ -88,6 +119,16 @@ export default function ComparePlans() {
               <option value="BSNL">BSNL</option>
               <option value="Jio">Reliance Jio</option>
               <option value="Vi">Vodafone Idea (Vi)</option>
+              <option value="Recharge Saathi">Recharge Saathi</option>
+            </select>
+          </div>
+          <div>
+            <label className="mb-1 block text-xs font-medium text-muted-foreground">Sort By</label>
+            <select className="flex h-11 w-full rounded-lg border border-input bg-background px-3 text-sm" value={sortBy} onChange={(e) => setSortBy(e.target.value as any)}>
+              <option value="none">Relevance</option>
+              <option value="lowest_price">Lowest Price</option>
+              <option value="highest_data">Highest Data</option>
+              <option value="best_value">Best Value</option>
             </select>
           </div>
           <div>
@@ -121,7 +162,7 @@ export default function ComparePlans() {
         </div>
       </Card>
 
-      <p className="mt-6 text-sm text-muted-foreground">Showing {filtered.length} plan{filtered.length === 1 ? '' : 's'}</p> 
+      <p className="mt-6 text-sm text-muted-foreground">Showing {sortedAndFiltered.length} plan{sortedAndFiltered.length === 1 ? '' : 's'}</p> 
 
       {loading ? (
         <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -131,15 +172,15 @@ export default function ComparePlans() {
         </div>
       ) : (
         <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {filtered.map((plan, i) => (
-            <RechargePlanCard key={plan.id} plan={plan} index={i} />
+          {sortedAndFiltered.map((plan, i) => (
+            <RechargePlanCard key={plan.id} plan={plan} index={i} isCheapest={plan.id === cheapestPlanId} />
           ))}
         </div>
       )}
 
-      {!loading && filtered.length === 0 && (
+      {!loading && sortedAndFiltered.length === 0 && (
         <p className="mt-12 text-center text-muted-foreground">
-          No plans match your filters. Try widening search or price.
+          No plans available. Please try different filters.
         </p>
       )}
     </div>

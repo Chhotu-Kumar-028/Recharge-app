@@ -2,6 +2,13 @@
 
 **🌍 Live Demo:** [https://recharge-app-ten.vercel.app/](https://recharge-app-ten.vercel.app/)
 
+![Recharge Saathi Application](screenshot.png)
+
+### Mobile Recharge Should Not Be a Luxury
+*Find cheaper recharge plans, compare telecom prices, and get help if you cannot afford a recharge.*
+
+**Why this matters:** Many students, workers, and families cannot afford expensive recharges. Staying connected is basic dignity—not a premium add-on.
+
 Recharge Saathi is a full-stack web application designed to help users manage, compare, and fund their mobile recharges. It provides a platform for data sharing, emergency recharges, and community-driven funding to ensure connectivity for everyone. 
 
 ## ✨ Key Features

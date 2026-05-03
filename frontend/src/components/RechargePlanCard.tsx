@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { Check, X } from 'lucide-react'
+import { Check, X, Smartphone, Sparkles } from 'lucide-react'
 import type { RechargePlan } from '@/data/rechargePlans'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
@@ -25,9 +25,10 @@ const bestForLabel: Record<string, string> = {
 export interface RechargePlanCardProps {
   plan: RechargePlan
   index?: number
+  isCheapest?: boolean
 }
 
-export function RechargePlanCard({ plan, index = 0 }: RechargePlanCardProps) {
+export function RechargePlanCard({ plan, index = 0, isCheapest = false }: RechargePlanCardProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 16 }}
@@ -37,13 +38,29 @@ export function RechargePlanCard({ plan, index = 0 }: RechargePlanCardProps) {
       whileHover={{ y: -4 }}
       className="h-full"
     >
-      <Card className="group h-full overflow-hidden border-border/80 transition-shadow hover:shadow-soft">
-        <CardHeader className="flex flex-row items-start justify-between gap-3 pb-2">
-          <img
-            src={logos[plan.company]}
-            alt=""
-            className="h-12 w-12 rounded-xl object-cover ring-2 ring-border transition-transform group-hover:scale-105"
-          />
+      <Card className={cn("group relative h-full overflow-hidden transition-shadow hover:shadow-soft", isCheapest ? "border-emerald-500 shadow-sm" : "border-border/80")}>
+        {isCheapest && (
+          <div className="absolute top-0 right-0 rounded-bl-xl bg-emerald-500 px-3 py-1 text-xs font-bold text-white shadow-sm z-10">
+            CHEAPEST
+          </div>
+        )}
+        {plan.company === 'Recharge Saathi' && !isCheapest && (
+          <div className="absolute top-0 right-0 rounded-bl-xl bg-primary px-3 py-1 text-xs font-bold text-primary-foreground shadow-sm z-10 flex items-center gap-1">
+            <Sparkles className="h-3 w-3" /> BEST VALUE
+          </div>
+        )}
+        <CardHeader className="flex flex-row items-start justify-between gap-3 pb-2 pt-6">
+          {logos[plan.company] ? (
+            <img
+              src={logos[plan.company]}
+              alt={plan.company}
+              className="h-12 w-12 rounded-xl object-cover ring-2 ring-border transition-transform group-hover:scale-105"
+            />
+          ) : (
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary ring-2 ring-border transition-transform group-hover:scale-105">
+              <Smartphone className="h-6 w-6" />
+            </div>
+          )}
           <span className="rounded-full bg-accent/15 px-3 py-1 text-xs font-semibold text-accent">
             {bestForLabel[plan.bestFor]}
           </span>
@@ -57,6 +74,11 @@ export function RechargePlanCard({ plan, index = 0 }: RechargePlanCardProps) {
               / {plan.validityDays} days
             </span>
           </p>
+          {plan.savings ? (
+            <div className="inline-block rounded-md bg-emerald-500/10 px-2.5 py-1 text-sm font-medium text-emerald-600">
+              You Save ₹{plan.savings} compared to others
+            </div>
+          ) : null}
           <ul className="grid gap-2 text-sm text-muted-foreground">
             <li>
               <strong className="text-foreground">{plan.dataPerDayGB} GB</strong>{' '}
